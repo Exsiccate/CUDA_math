@@ -1,0 +1,1 @@
+C:\Users\Admin\Source\Repos\Exsiccate\CUDA_math\CudaMain\x64\Debug\CudaMain.exe
