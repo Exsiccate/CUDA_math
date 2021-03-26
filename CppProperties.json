@@ -6,6 +6,7 @@
       ],
       "name": "x64-Debug",
       "includePath": [
+        "D:\\CUDA\\include\\",
         "${env.INCLUDE}",
         "${workspaceRoot}\\**"
       ],
