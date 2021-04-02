@@ -1,43 +1,39 @@
 ﻿
-#include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
-
+#include <thrust/transform.h>
+#include <thrust/sequence.h>
+#include <thrust/copy.h>
+#include <thrust/fill.h>
+#include <thrust/replace.h>
+#include <thrust/functional.h>
 #include <iostream>
 
 int main(void)
 {
-    // H has storage for 4 integers
-    thrust::host_vector<int> H(4);
+    // allocate three device_vectors with 10 elements
+    thrust::device_vector<long> PoT(124);
+    thrust::device_vector<long> Rest(124);
+    thrust::device_vector<long> Twos(124);
 
-    // initialize individual elements
-    H[0] = 14;
-    H[1] = 20;
-    H[2] = 38;
-    H[3] = 46;
+    // fill last element with 1 
+    PoT[123] = 1; 
 
-    // H.size() returns the size of vector H
-    std::cout << "H has size " << H.size() << std::endl;
+    // fill Twos with twos
+    thrust::fill(Twos.begin(), Twos.end(), 2);
 
-    // print contents of H
-    for (int i = 0; i < H.size(); i++)
-        std::cout << "H[" << i << "] = " << H[i] << std::endl;
+    // compute Y = X mod 2
+    thrust::transform(PoT.begin(), PoT.end(), Twos.begin(), Rest.begin(), thrust::multiplies<int>());
 
-    // resize H
-    H.resize(2);
+    // print X
+    thrust::copy(PoT.begin(), PoT.end(), std::ostream_iterator<int>(std::cout, ","));
+    // print \n
+    std::cout << "\n";
+    // print Z
+    thrust::copy(Twos.begin(), Twos.end(), std::ostream_iterator<int>(std::cout, ","));
+    // print \n
+    std::cout << "\n";
+    // print Z
+    thrust::copy(Rest.begin(), Rest.end(), std::ostream_iterator<int>(std::cout, ","));
 
-    std::cout << "H now has size " << H.size() << std::endl;
-
-    // Copy host_vector H to device_vector D
-    thrust::device_vector<int> D = H;
-
-    // elements of D can be modified
-    D[0] = 99;
-    D[1] = 88;
-
-    // print contents of D
-    for (int i = 0; i < D.size(); i++)
-        std::cout << "D[" << i << "] = " << D[i] << std::endl;
-
-    // H and D are automatically deleted when the function returns
     return 0;
 }
